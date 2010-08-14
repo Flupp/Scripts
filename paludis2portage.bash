@@ -64,8 +64,8 @@ ${0##*/} [--src <source-directory>] [--dest <destination-directory>]
   Portage's/emerge's package.keywords, package.mask, package.unmask and
   package.use must be directories or must not exist.
   The script will overwrite existing files without prompting. Other files will
-  be untouched. It deletes and shows all lines which emerge does not understand.
-  You have to configure these things manually in portage.
+  be untouched. It ignores and shows all lines which emerge does not understand.
+  You have to configure these things manually for emerge.
 EOF
 }
 
@@ -79,7 +79,7 @@ function paludisCat() {
 }
 
 # man 5 ebuild
-# calculate regex one time global, not on every function call
+# calculate regex once globally, not on every function call
 Category='([[:alnum:]_\-]+)'
 Package="(${Category})"
 AtomBase="(${Category}/${Package})"
@@ -105,7 +105,7 @@ function convert() {
 				if [ ! -d "${FILE}" ]
 				then
 					convert "${FILE}" "${2}/${FILE##*/}"
-				#else  # paludis semms to ignore sub-directories
+				#else  # paludis seems to ignore sub-directories
 				#	convert "${FILE}" "${2}"
 				fi
 			fi

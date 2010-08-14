@@ -49,8 +49,8 @@ ${0##*/} <time>
   <time> must adhere to the syntax of date.
 
   Examples:
-  ${0##*/} 23:59 && echo -e '\aWake up! A new day begins in one minute.'
-  ${0##*/} 2101-01-01 00:00 && echo 'Happy new century!'
+    ${0##*/} 23:59 && echo -e '\aWake up! A new day begins in a minute.'
+    ${0##*/} 2101-01-01 00:00 && echo 'Happy new century!'
 EOF
 exit 1
 fi
