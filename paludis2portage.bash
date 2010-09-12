@@ -44,6 +44,10 @@
 # * ExtendedAtomPrefix contained \* by mistake
 # * Category used * (accepted empty string) instead of +
 #
+# 2010-09-12
+# * fixed end of $CHECKREGEX
+# * fixed $AtomVersion
+#
 
 set -e -u -C
 
@@ -83,7 +87,7 @@ function paludisCat() {
 Category='([[:alnum:]_\-]+)'
 Package="(${Category})"
 AtomBase="(${Category}/${Package})"
-AtomVersion='(([[:digit:]]+\.)*[[:digit:]]+[[:alpha:]]?((_alpha|_beta|_pre|_rc|_p)[[:digit:]]+)?)'
+AtomVersion='(([[:digit:]]+\.)*[[:digit:]]+[[:alpha:]]?((_alpha|_beta|_pre|_rc|_p)[[:digit:]]+)*(-r[[:digit:]]+)?)'
 AtomPrefixOperator='(>|>=|=|<=|<)'
 ExtendedAtomPrefix='(!|!!|~)'
 ExtendedAtomPostfix='(\*)'
@@ -91,7 +95,7 @@ AtomSlot='(([[:digit:]]+\.)*[[:digit:]]+)'
 #AtomUse='(\[\])'  # incomplete, I think
 DependAtom="((${AtomBase}|(${AtomPrefixOperator}|${ExtendedAtomPrefix})${AtomBase}-${AtomVersion}${ExtendedAtomPostfix}?)(:${AtomSlot})?)"
 
-CHECKREGEX="^[[:space:]]*(#|${DependAtom}|\$)"
+CHECKREGEX="^[[:space:]]*(\$|#|${DependAtom}(\$|[[:space:]]))"
 
 # convert <source> <destination>
 function convert() {
