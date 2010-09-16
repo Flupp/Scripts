@@ -32,30 +32,61 @@
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# 2010-09-13
+# 2010-09-16
 # + initial release
 #
 
-# diff <(cat /var/db/pkg/**/CONTENTS | sed -n 's#^[^ ]* \([^ ]*\.la\) .*$#\1#p' | sort) <(locate -r "\.la$" | grep -v "^/root/\|^/home/" | sort)
-
 set -e -u -C
 
-function findfiles() {
-	locate -r "\.la$"
+function printHelp() {
+cat <<EOF
+${0##*/} list [<regex>]
+${0##*/} untracked
+${0##*/} untracked-la-files
+${0##*/} license
+EOF
 }
 
-declare -i CNT="$(findfiles | wc -l)"
-
-declare -i I=0
-findfiles | while read L
-do
-	I+=1
-	echo -n "[${I} / ${CNT} = $((100 * I / CNT))%] ${L} "
-	RET=0
-	cave owner "${L}" 2>&1 || RET="${?}"
-	if [ "${RET}" -ne 0 ]
+function vdb-list() {
+	S='.*'
+	if [ "${#}" -ne 0 ]
 	then
-		echo -e "\e[1;31m'cave owner' returned ${RET}\e[0m"
-		echo "${L}" >&2
+		S="${*}"
 	fi
-done
+	cat /var/db/pkg/*/*/CONTENTS \
+	| sed -n "s#^obj \(${S}\) [^ ]* [^ ]*\$\|^dir \(${S}\)\$\|^sym \(${S}\) -> .* [^ ]*\$#\1\2\3#p" \
+	| sort \
+	| uniq
+}
+
+function vdb-dead-la-files() {
+	diff <(vdb-list '.*\.la' | sort | uniq) <(locate -r "\.la$" | sort | uniq) \
+	| sed -n 's#^> \(.*\)$#\1#p'
+}
+
+function vdb-untracked() {
+	diff \
+		<(vdb-list) \
+		<(find $(vdb-list | sed -n 's#^\(/[^/]*\)/.*$#\1#p' | uniq) \
+		  | grep -v '^/usr/portage/\|^/var/cache/\|^/var/db/pkg/' \
+		  | sort \
+		 )
+}
+
+
+if [ "${#}" -eq 0 ]
+then
+	printHelp
+	exit
+fi
+
+
+P="${1}"
+shift
+case "${P}" in
+	(list) vdb-list "${@}" ;;
+	(untracked) vdb-untracked ;;
+	(untracked-la-files) vdb-dead-la-files ;;
+	(license) head -n 31 "${0}" | tail -n +5 ;;
+	(*) printHelp ;;
+esac
