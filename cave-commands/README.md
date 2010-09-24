@@ -6,3 +6,5 @@ in the colon-separated `CAVE_COMMANDS_PATH` environment variable, or, if unset,
 `/usr/libexec/cave/commands`. Any executables in this path will also be
 available as commands (with any file extension stripped); these executables may
 use the `$CAVE` environment variable to get access to the main cave program.
+
+(from http://paludis.pioto.org/clients/cave.html)
