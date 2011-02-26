@@ -50,6 +50,7 @@ LOGDIR='/var/log/paludis'
 LOGAFTER='0'
 LOGBEFORE='1000000000000'
 LOGLEVELPARAM='I'
+USE_COLOR='true'
 
 function printHelp() {
 cat <<EOF
@@ -67,6 +68,8 @@ ${0##*/} [-a <date-after>] [-b <date-before>] [-c <hours>] [-t] [-d <directory>]
   --logdir <directory>, -d <directory>
     Directory where to look for the log files.
     Default: ${LOGDIR}
+  --no-color
+    Disable colored output.
 EOF
 }
 
@@ -79,6 +82,7 @@ do
 		(-t | --today    ) shift; LOGAFTER="$(date -d "$(date +'%Y-%m-%d')" +'%s')";;
 		(     --loglevel ) shift; LOGLEVELPARAM="${1?\"--loglevel\" expects one parameter.}"; shift;;
 		(-d | --logdir   ) shift; LOGDIR="${1?\"--logdir\" expects one parameter.}"; shift;;
+		(     --no-color ) shift; USE_COLOR='false';;
 		(-h | --help     ) printHelp; exit 0;;
 		(-l | --license  ) head -n 31 "${0}" | tail -n +5; exit 0;;
 		(*               ) printHelp; exit 1;;
@@ -104,16 +108,30 @@ COLOUR_BROWN=$'\e[33m'
 COLOUR_PURPLE=$'\e[35m'
 COLOUR_DARK_BLUE=$'\e[34m'
 
-COLOUR_NORMAL=$'\e[0m'
+if ${USE_COLOR}
+then
+	COLOUR_NORMAL=$'\e[0m'
 
-COL_I="${COLOUR_NORMAL}"
-COL_L="${COLOUR_GREEN}"
-COL_W="${COLOUR_YELLOW}"
-COL_E="${COLOUR_RED}"
+	COL_I="${COLOUR_NORMAL}"
+	COL_L="${COLOUR_GREEN}"
+	COL_W="${COLOUR_YELLOW}"
+	COL_E="${COLOUR_RED}"
 
-COL_DATE="\033[1;37m"
-COL_ACTION="${COLOUR_CYAN}"
-COL_PACKAGE="${COLOUR_GREEN}"
+	COL_DATE="\033[1;37m"
+	COL_ACTION="${COLOUR_CYAN}"
+	COL_PACKAGE="${COLOUR_GREEN}"
+else
+	COLOUR_NORMAL=''
+
+	COL_I=''
+	COL_L=''
+	COL_W=''
+	COL_E=''
+
+	COL_DATE=''
+	COL_ACTION=''
+	COL_PACKAGE=''
+fi
 
 for I in "${LOGDIR}"/*.messages
 do
@@ -136,7 +154,7 @@ do
 		echo -e "${COL_DATE}$(date -d "1970-01-01 ${TIMESTAMP} sec GMT" +'%Y-%m-%d %H:%M:%S') ${COL_ACTION}${ACTION} ${COL_PACKAGE}${PKG}${COLOUR_NORMAL}"
 		echo "         ${I##*/}"
 		echo
-		while read L ; do
+		while IFS='' read -r L ; do
 			case "${L:0:1}" in
 				('I') [ "${LOGLEVEL}" -ge 4 ] && { echo -en "${COL_I}${L:0:1}${COLOUR_NORMAL}"; echo "${L:1}"; } ;;
 				('L') [ "${LOGLEVEL}" -ge 3 ] && { echo -en "${COL_L}${L:0:1}${COLOUR_NORMAL}"; echo "${L:1}"; } ;;
