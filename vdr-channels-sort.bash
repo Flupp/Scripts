@@ -43,6 +43,8 @@
 # * fixed filtering
 #
 
+# see man 5 vdr
+
 set -u -C
 
 if [ "${#}" -ne 1 ]
