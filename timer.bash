@@ -38,6 +38,9 @@
 # 2010-08-14
 # * reworked help
 #
+# 2012-10-31
+# * also display absolute time when timer ends
+#
 
 set -e -u -C
 
@@ -81,6 +84,6 @@ H="H % 24"
 [ "${H}" -gt 0 ] && HH="${H}h " || HH=''
 [ "${D}" -gt 0 ] && DD="${D}d " || DD=''
 
-echo -n "Sleeping for ${DD}${HH}${MM}${SS}... "
+echo -n "Sleeping until $(date -d "${*}"), i.e. for ${DD}${HH}${MM}${SS}... "
 sleep "${DIFF}s"
 echo 'done.'
