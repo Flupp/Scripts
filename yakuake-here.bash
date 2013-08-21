@@ -35,12 +35,32 @@
 # 2013-06-22
 # + initial release
 #
+# 2013-08-21
+# * workaround for different qdbus executable names
+#
 
 #
 # Open a new tab in yakuake in the current directory.
 #
 
 set -Ceu
+
+function find_qdbus {
+	local -ar QDBUS_CMDS=(qdbus qdbus-qt5 qdbus-qt4)
+	for QDBUS in "${QDBUS_CMDS[@]}"
+	do
+		command -v "${QDBUS}" >/dev/null 2>&1 && return
+	done
+	unset QDBUS
+	echo "None of the folowing commands found: ${QDBUS_CMDS[*]}" >&2
+	return 1
+}
+
+find_qdbus || exit 1
+
+function qdbus {
+	command "${QDBUS}" "${@}"
+}
 
 {
 	qdbus org.kde.yakuake /yakuake/sessions addSession || yakuake
