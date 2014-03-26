@@ -2,7 +2,7 @@
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# Copyright (c) 2013, Toni Dietze
+# Copyright (c) 2013-2014, Toni Dietze
 #
 # All rights reserved.
 #
@@ -38,9 +38,13 @@
 # 2013-08-21
 # * workaround for different qdbus executable names
 #
+# 2014-03-26
+# * directory may also be passed as command line argument
+#
 
 #
-# Open a new tab in yakuake in the current directory.
+# Open a new tab in yakuake in the current directory or in a directory given
+# as command line argument.
 #
 
 set -Ceu
@@ -63,8 +67,9 @@ function qdbus {
 }
 
 {
+	DIR="${1:-${PWD}}"
 	qdbus org.kde.yakuake /yakuake/sessions addSession || yakuake
-	qdbus org.kde.yakuake /yakuake/sessions runCommand "cd $(printf '%q' "${PWD}")"
+	qdbus org.kde.yakuake /yakuake/sessions runCommand "cd $(printf '%q' "${DIR}")"
 	# qdbus org.kde.yakuake /yakuake/tabs setTabTitle "`qdbus org.kde.yakuake /yakuake/sessions activeSessionId`" "$(echo %aPath% | sed -e 's|.*/\([^/]*\)/$|\1|')"
 	if [ "$(qdbus org.kde.yakuake /yakuake/MainWindow_1 org.qtproject.Qt.QWidget.visible)" == "false" ]
 	then qdbus org.kde.yakuake /yakuake/window toggleWindowState
