@@ -54,6 +54,11 @@ function ask() {
 	esac
 }
 
+echo 'Quick and easy setup of a shared git repository based on file'
+echo 'permissions. This is useful, e.g., for sharing via ssh on a server with'
+echo 'several logins.'
+
+echo
 
 IFS='' read -r -p 'Name of git directory (without .git extension): ' GITDIR
 
