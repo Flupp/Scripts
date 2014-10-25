@@ -35,4 +35,6 @@
 echo ghc
 echo cabal-install
 echo haddock
+echo happy
+echo alex
 pacman -Ss 'haskell-' | sed -n 's/^.*\/\(haskell-[^ ]*\) .*$/\1/p'
