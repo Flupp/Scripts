@@ -31,6 +31,11 @@
 # SUCH DAMAGE.
 #
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# This script lists (hopefully) all Haskell-related packages in Arch Linux.
+# You can easily install all these packages via
+# pacman -S --needed $(arch-haskell-packages.bash)
+#
 
 echo ghc
 echo cabal-install
