@@ -2,7 +2,7 @@
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# Copyright (c) 2014, Toni Dietze
+# Copyright (c) 2014–2016, Toni Dietze
 #
 # All rights reserved.
 #
@@ -39,7 +39,10 @@
 
 echo ghc
 echo cabal-install
-echo haddock
 echo happy
+echo hasktags
+echo hlint
+echo hoogle
 echo alex
-pacman -Ss 'haskell-' | sed -n 's/^.*\/\(haskell-[^ ]*\) .*$/\1/p'
+echo stylish-haskell
+pacman --sync --quiet --search 'haskell-'
