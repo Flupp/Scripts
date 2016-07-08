@@ -45,4 +45,4 @@ echo hlint
 echo hoogle
 echo alex
 echo stylish-haskell
-pacman --sync --quiet --search 'haskell-'
+pacman --sync --quiet --search '^haskell-'
