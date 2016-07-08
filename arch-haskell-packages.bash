@@ -39,6 +39,7 @@
 
 echo ghc
 echo cabal-install
+echo stack
 echo happy
 echo hasktags
 echo hlint
