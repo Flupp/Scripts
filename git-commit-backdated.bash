@@ -2,7 +2,7 @@
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# Copyright (c) 2014, Toni Dietze
+# Copyright (c) 2014, 2023, Toni Dietze
 #
 # All rights reserved.
 #
@@ -51,7 +51,7 @@ EOF
 [ "${#}" -le 0 ] && { printHelp; exit 1; }
 
 
-# http://stackoverflow.com/questions/957928/is-there-a-way-to-get-the-git-root-directory-in-one-command
+# https://stackoverflow.com/q/957928
 cd "$(git rev-parse --show-toplevel)"
 
 C=false
@@ -69,7 +69,7 @@ done
 
 exec 3<&0
 
-# Idea from: http://stackoverflow.com/a/14300605
+# Idea from: https://stackoverflow.com/a/14300605
 <&- git diff --name-only --cached  \
 |	while read
 	do
@@ -86,7 +86,7 @@ exec 3<&0
 			fi
 		done
 		CMD=(git commit --date="${BASH_REMATCH[2]}" "${@}")
-		{	read -p "${CMD[*]} "
+		{	read -p "? $(printf '%q ' "${CMD[@]}")"
 			set -x
 			"${CMD[@]}"
 		} <&3
